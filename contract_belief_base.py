@@ -1,15 +1,32 @@
 # contract_belief_base.py
 
-def contract_belief_base(belief_base, priority_order):
-    # Sort the priority order by priority, assuming higher priority comes first
-    priority_order.sort(reverse=True)
+def contract_belief_base(belief_base, priority_order, alpha):
 
-    # Iterate over each formula in the priority order
-    for formula in priority_order:
-        # Check if the formula exists in the belief base
-        if formula in belief_base:
-            # Remove the formula and all formulas with lower priority
-            belief_base = [f for f in belief_base if priority_order.index(f) >= priority_order.index(formula)]
+#Create a dictionary from formula to its priority for faster access
+priority_dict = {formula: i for i, formula in enumerate(priority_order)}
 
+#Check if alpha is directly in the belief base
+if alpha in belief_base:
+    belief_base.remove(alpha)   #Directly remove alpha
     return belief_base
+#If alpha is not in the belief base, check for entailment and remove formulas based on priority
 
+#Sort the belief base by priority, lower index in priority_order means higher priority 
+belief_base.sort(key=lambda x: priority_dict.get(x, len(priority_order)))
+
+#Removing formulas from lowest to highest priority until alpha is no entailed
+for formula in reversed(belief_base):
+    temp_belief_base = belief_base[:]
+    temp_belief_base.remove(formula)
+
+    #if not entails(temp_belief_base, alpha):
+    #   return temp_belief_base
+
+return belief_base  #Return the contracted belief base if contraction is necessary
+
+# Example usage
+belief_base = ['a', 'b', 'c']
+priority_order = ['c', 'b', 'a']    #Higher priority first 
+alpha = 'b'
+contracted_belief_base = contract_belief_base(belief_base, priority_order, alpha)
+print(contracted_beleif_base)
