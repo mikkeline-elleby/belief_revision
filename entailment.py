@@ -315,11 +315,12 @@ def distributive_laws(formula):
     # in the "otherwise" case the formula is a symbol and is returned
     else:
         return formula
-    
-print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
-#print(distributive_laws("or(a,and(b,c))")) #should give and(or(a,b),or(a,c))
-#print(distributive_laws("or(and(a,b),c)")) #should give and(or(a,c),or(b,c))
-#print(eliminate_double_negation("and(p,not(not(s)))"))    
-#print(de_morgans("and(p,not(or(w,e)))"))
-#convert_to_CNF(["and(p,q)","not(a)","or(a,b)", "or(not(a),b)","bi(not(p),a)", "imp(a,and(b,q))"],"or(p,t)")
+
+if __name__ == '__main__':  
+    print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
+    #print(distributive_laws("or(a,and(b,c))")) #should give and(or(a,b),or(a,c))
+    #print(distributive_laws("or(and(a,b),c)")) #should give and(or(a,c),or(b,c))
+    #print(eliminate_double_negation("and(p,not(not(s)))"))    
+    #print(de_morgans("and(p,not(or(w,e)))"))
+    #convert_to_CNF(["and(p,q)","not(a)","or(a,b)", "or(not(a),b)","bi(not(p),a)", "imp(a,and(b,q))"],"or(p,t)")
 

@@ -88,20 +88,31 @@ def consistency_postulate(p, B_new):
 
 def extenstionality_postulate(B, p, B_new):
     """If p <-> q in Cn(Ø), then B * p == B * q"""
-
-    for q in B.formulas:
-        # determine equivalence between two sentences
-        if p == q:
+    success = False
+    for x in B.formulas:
+        a, b = find_equivalence(p, x)
+        if (a != False and b!= False and (a == p or b == p)):
             # B * q == B * p
             B.revise(q)
             if B == B_new:
-                return "success"
+                return success == True
             else:
                 print(f"Extensionality Postulate not satisfied by B * {p}")
                 return "failure"
-    return "neutral"
+    
+    if success:
+        return "success"
+    else:
+        return "neutral"
 
-    # what is there are multiple bi-implications within the set?
-
-def check_consistency():
+def check_consistency(B, p):
     ...
+
+def find_equivalence(p, q):
+    if ("bi" in q) and (p in q):
+        q_stripped = q.replace("bi", "").strip("()")
+        print(q_stripped)
+        a, b = q_stripped.split(",")
+        print(a,b)
+        return a,b
+    return False, False

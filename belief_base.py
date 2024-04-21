@@ -6,6 +6,10 @@ class BeliefBase:
 
     def add_formula(self, formula, priority):
         self.formulas[formula] = priority 
+        return self
+    
+    def revise(self, formula):
+        ...
 
     def remove_formula(self, formula):
         if formula in self.formulas:
@@ -36,3 +40,6 @@ class BeliefBase:
 
         return False    #Return False if contraction was not possible
 
+    def query_formula(self, formula):
+        return formula in self.formulas
+    
