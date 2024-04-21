@@ -1,4 +1,4 @@
-
+from entailment import resolution  
 
 class BeliefBase: 
     def __init__(self):
@@ -18,7 +18,6 @@ class BeliefBase:
             return True
         
     #Check if the belief base entails alpha using the resolution method
-    from entailment import resolution
     if resolution(list(self.formulas.key()), alpha):
         
         #Removing the least important formulas to stop entailment of alpha 

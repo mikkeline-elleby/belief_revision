@@ -9,7 +9,7 @@ priority_dict = {formula: i for i, formula in enumerate(priority_order)}
 if alpha in belief_base:
     belief_base.remove(alpha)   #Directly remove alpha
     return belief_base
-#If alpha is not in the belief base, check for entailment and remove formulas based on priority
+
 
 #Sort the belief base by priority, lower index in priority_order means higher priority 
 belief_base.sort(key=lambda x: priority_dict.get(x, len(priority_order)))
