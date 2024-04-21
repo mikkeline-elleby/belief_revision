@@ -18,7 +18,7 @@ class BeliefBase:
             return True
         
     #Check if the belief base entails alpha using the resolution method
-    if resolution(list(self.formulas.key()), alpha):
+    if resolution(list(self.formulas.keys()), alpha):
         
         #Removing the least important formulas to stop entailment of alpha 
         sorted_formulas = sorted(self.formulas.items(), key=lambda item: item[1])   #Sort by prioritry, lowest first
