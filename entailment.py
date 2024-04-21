@@ -1,4 +1,7 @@
-# cnf_convertion.py
+# entailment.py
+
+# to call this file the method resolution() should be called. This takes a belief base and an alpha and will firstly convert
+# and(KB,not(alpha)) into CNF and then perform the resolution algorithm. 
 
 CLAUSES = []
 NEW = []
@@ -172,7 +175,7 @@ def eliminate_bi_and_imp(formula):
         B = formula[comma_index+1:-1]
         return "or(not(" + eliminate_bi_and_imp(A) + ")," + eliminate_bi_and_imp(B) + ")"
     
-    # a simple conjunction or disjunction
+    # a simple conjunction or disjunctions
     elif formula[0:3] == "and" or formula[0:2] == "or":
         comma_index = matching_comma(formula)
         parentises_index = formula.index("(")
