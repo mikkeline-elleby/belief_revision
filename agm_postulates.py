@@ -1,7 +1,6 @@
 # AGM postulates for revision
 
 from formulas import *
-from resolution import check_resolution
 from belief_base import BeliefBase
 from copy import deepcopy
 
@@ -75,9 +74,9 @@ def consistency_postulate(p, B_new):
     """B revised by p is consistent if p is consistent"""
 
     # check is belief p is consistent
-    if check_resolution(BeliefBase(), p) == "consistent":
+    if check_consistency(BeliefBase(), p):
         # check is new belief set is consistent
-        if check_resolution(B_new, "") == "consistent":
+        if check_consistency(B_new, "") == "consistent":
             return "success"
         else:
             print(f"Consistency Postulate not satisfied by B * {p}")
@@ -103,3 +102,6 @@ def extenstionality_postulate(B, p, B_new):
     return "neutral"
 
     # what is there are multiple bi-implications within the set?
+
+def check_consistency():
+    ...
