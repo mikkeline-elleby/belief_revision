@@ -36,14 +36,3 @@ class BeliefBase:
 
     return False    #Return False if contraction was not possible
 
-
-# Usage
-bb = BeliefBase()
-bb.add_formula("a or b", 1)
-bb.add_formula("not a", 2)
-bb.add_formula("b", 3)
-
-#Contracting a formula 
-contracted = bb.contract_formula("b")
-print("Contraction successful:" , contracted)
-

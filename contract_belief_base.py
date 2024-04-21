@@ -24,9 +24,3 @@ for formula in reversed(belief_base):
 
 return belief_base  #Return the contracted belief base if contraction is necessary
 
-# Example usage
-belief_base = ['a', 'b', 'c']
-priority_order = ['c', 'b', 'a']    #Higher priority first 
-alpha = 'b'
-contracted_belief_base = contract_belief_base(belief_base, priority_order, alpha)
-print(contracted_beleif_base)
