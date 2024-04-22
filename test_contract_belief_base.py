@@ -1,3 +1,5 @@
+#Test af contract_belief_base - lige pt fungere ikke helt...
+
 import unittest
 from contract_belief_base import contract_belief_base
 from belief_base import BeliefBase
