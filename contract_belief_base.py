@@ -1,6 +1,7 @@
 # contract_belief_base.py
 
 from belief_base import BeliefBase
+from entailment import entails
 
 
 def contract_belief_base(belief_base, priority_order, alpha):
@@ -27,7 +28,7 @@ def contract_belief_base(belief_base, priority_order, alpha):
 
     
     #Simulate the entails function to check if the base still intails alpha
-    if not entails(temp_belief_base, alpha):
+    if not entails(temp_belief_base.formulas.keys(), alpha):
         return set(temp_belief_base.formulas.keys())    #Return modified formulas as a set
 
     return formulas_set  #Return the contracted belief base if contraction is necessary
