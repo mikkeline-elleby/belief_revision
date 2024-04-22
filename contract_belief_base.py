@@ -8,7 +8,7 @@ def contract_belief_base(belief_base, priority_order, alpha):
     if not isinstance(belief_base, BeliefBase):
         raise ValueError("belief_base must be an instance of BeliefBase")
 
-    #
+    #Create a set from formulas
     formulas_set = set(belief_base.formulas.keys())
 
     #Check if alpha is directly in the belief base
@@ -22,7 +22,7 @@ def contract_belief_base(belief_base, priority_order, alpha):
 
     #Removing formulas from lowest to highest priority until alpha is no entailed
     for formula in reversed(sorted_formulas):
-        temp_belief_base = BeliefBase[:]    #Creating a new temporary BeliefBase instance
+        temp_belief_base = BeliefBase()    #Creating a new temporary BeliefBase instance
         temp_belief_base.formulas = {f: belief_base.formulas[f] for f in belief_base.formulas if f !=formula}
 
     
