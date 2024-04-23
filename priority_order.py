@@ -58,7 +58,8 @@ def find_variable(formula):
             variables.append(match)
     return variables
 
-def count_satisfiable_formulas(formula_str):
+def entrenchment(formula_str):
+    #count number of satisfiable formulas 
     formula = parse_formula(formula_str)
     variables = find_variable(formula_str)
     truth_assignments = itertools.product([True, False], repeat=len(variables))
@@ -68,7 +69,5 @@ def count_satisfiable_formulas(formula_str):
 # Example usage
 formula_str = "and(imp(or(a,d),c),b)"
 
-
-
-satisfiable_count = count_satisfiable_formulas(formula_str)
+satisfiable_count = entrenchment(formula_str)
 print("Number of satisfiable formulas:", satisfiable_count)
