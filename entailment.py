@@ -108,7 +108,7 @@ def to_clauses(formula):
 # the resoution function definition takes the belief base and an alpha, and converts the sentence and(KB,not(alpha))
 # into CNF. Then it appends the clauses in the CNF formula to the global list CLAUSES.
 # Lasty, the method loops through each pair of clauses to resolve possibe complementary literals.
-def resolution(belief_base,alpha):
+def resolution(belief_base, alpha):
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
     formula = make_formula("",formula)

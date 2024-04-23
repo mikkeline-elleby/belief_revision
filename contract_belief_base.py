@@ -2,7 +2,7 @@
 
 from belief_base import BeliefBase
 from entailment import resolution
-
+from copy import deepcopy
 
 def contract_belief_base(belief_base, priority_order, alpha):
     #Ensure the belief_base is an instance of BeliefBase
@@ -31,5 +31,7 @@ def contract_belief_base(belief_base, priority_order, alpha):
     if not resolution(temp_belief_base.formulas.keys(), alpha):
         return set(temp_belief_base.formulas.keys())    #Return modified formulas as a set
 
-    return formulas_set  #Return the contracted belief base if contraction is necessary
+    belief_base.formulas = formulas_set
+
+    return belief_base  #Return the contracted belief base if contraction is necessary
 
