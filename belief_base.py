@@ -1,11 +1,14 @@
+# belief_base.py
+
 from entailment import resolution  
 
 class BeliefBase: 
     def __init__(self):
-        self.formulas = {}
+        self.formulas = {}  #Change to dictionary to store formulas with priority
 
     def add_formula(self, formula, priority):
-        self.formulas[formula] = priority 
+        self.formulas[formula] = priority
+        return self
 
     def remove_formula(self, formula):
         if formula in self.formulas:
@@ -36,7 +39,10 @@ class BeliefBase:
 
         return False    #Return False if contraction was not possible
 
-def entrenchment(B, belief):
+    def query_formula(self, formula):
+        return formula in self.formulas
+    
+"""def entrenchment(B, belief):
     if belief.entrenchment is None:
         n_entrenchment = 1
         n_letters = belief.formula.atoms()
@@ -58,4 +64,4 @@ def count_operator(clause, c=0):
             c = c + count_operator(sub.args, c+1) + len(sub.atoms()) - 1
         elif isinstance(sub, 'And'):
             c = c + count_operator(sub.args, c-1)
-    return c
+    return c"""
