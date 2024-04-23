@@ -36,3 +36,26 @@ class BeliefBase:
 
         return False    #Return False if contraction was not possible
 
+def entrenchment(B, belief):
+    if belief.entrenchment is None:
+        n_entrenchment = 1
+        n_letters = belief.formula.atoms()
+        for b in B.beliefs:
+            b_letters = b.formula.atoms()
+            if n_letters & b_letters:
+                b.entrenchment = 0.9 * b.entrenchment
+                if count_operator([belief.formula]) < count_operator([b.formula]):
+                    b.entrenchment = 0.9 * b.entrenchment
+                else:
+                    n_entrenchment = 0.9 * n_entrenchment
+    else:
+        n_entrenchment = belief.entrenchment
+    return n_entrenchment
+
+def count_operator(clause, c=0):
+    for sub in clause:
+        if isinstance(sub, Or):
+            c = c + count_operator(sub.args, c+1) + len(sub.atoms()) - 1
+        elif isinstance(sub, And):
+            c = c + count_operator(sub.args, c-1)
+    return c
