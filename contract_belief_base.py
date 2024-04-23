@@ -10,7 +10,7 @@ def contract_belief_base(belief_base, priority_order, alpha):
         raise ValueError("belief_base must be an instance of BeliefBase")
 
     #Create a set from formulas
-    formulas_set = set(belief_base.formulas.keys())
+    formulas_set = belief_base.formulas
 
     #Check if alpha is directly in the belief base
     if alpha in formulas_set:
@@ -31,7 +31,8 @@ def contract_belief_base(belief_base, priority_order, alpha):
     if not resolution(temp_belief_base.formulas.keys(), alpha):
         return set(temp_belief_base.formulas.keys())    #Return modified formulas as a set
 
-    belief_base.formulas = formulas_set
-
-    return belief_base  #Return the contracted belief base if contraction is necessary
+    new_belief_base = BeliefBase()
+    new_belief_base.formulas = formulas_set
+    
+    return new_belief_base #Return the contracted belief base if contraction is necessary
 

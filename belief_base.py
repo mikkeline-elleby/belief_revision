@@ -2,10 +2,10 @@ from entailment import resolution
 
 class BeliefBase: 
     def __init__(self):
-        self.formulas = {}
+        self.formulas = set()
 
     def add_formula(self, formula, priority):
-        self.formulas[formula] = priority 
+        self.formulas.add(formula)
         return self
     
     def revise(self, formula):
@@ -13,7 +13,7 @@ class BeliefBase:
 
     def remove_formula(self, formula):
         if formula in self.formulas:
-            del self.formulas[formula]
+            self.formulas.remove(formula)
 
     def contract_formula(self, alpha):
         #Check if alpha is directly in the belief base

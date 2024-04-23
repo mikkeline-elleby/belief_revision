@@ -41,7 +41,7 @@ def success_postulate(p, B_new):
 def inclusion_postulate(B, p, B_new):
     """B revised by p - is a subset of B expanded by p"""
 
-    B.add_formula(p)
+    B.add_formula(p, 1)
 
     # check if all sentences of new belief set is present in previous belief set
     for x in B_new.formulas:
@@ -62,7 +62,7 @@ def vacuity_postulate(B, p, B_new):
             return "neutral"
 
     # if not p not present B_new == B + p
-    B.add_formula(p)
+    B.add_formula(p, 1)
     if B == B_new:
         return "success"
     else:
