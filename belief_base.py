@@ -1,3 +1,5 @@
+# belief_base.py
+
 from entailment import resolution  
 
 class BeliefBase: 
