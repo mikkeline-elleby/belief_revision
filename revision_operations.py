@@ -7,7 +7,7 @@ def contract_belief_base(belief_base, priority_order):
     # Implement contraction logic here
     pass
 
-def _expand_belief_base(belief_base, new_formula):
+def expand_belief_base(belief_base, new_formula):
     # expansion can only be done if resolution is consistent
     belief_base.add_formula(new_formula)
 
@@ -19,7 +19,7 @@ def belief_revision(belief_base, new_formula):
     # check resolution to determine if revision is needed
     if not resolution(belief_base, new_formula):
         contract_belief_base(belief_base, new_formula)
-        _expand_belief_base(belief_base, new_formula)
+        expand_belief_base(belief_base, new_formula)
 
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, new_formula, belief_base)
