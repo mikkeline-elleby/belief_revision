@@ -75,7 +75,8 @@ def resolve(c1,c2):
 
     for l1 in LITERALS1:
         for l2 in LITERALS2:
-            if l1 == "not(" + l2 + ")" or l2 == "not(" + l1 + ")" and LITERALS1.index(l1) < LITERALS2.index(l2):
+            print("l1",l1,"l2",l2)
+            if l1 == "not(" + l2 + ")" or l2 == "not(" + l1 + ")":
                 print("resolved", l1,"and",l2,"with",c1,"and",c2)
                 #print(CLAUSES)
 
@@ -108,7 +109,9 @@ def to_clauses(formula):
 # the resoution function definition takes the belief base and an alpha, and converts the sentence and(KB,not(alpha))
 # into CNF. Then it appends the clauses in the CNF formula to the global list CLAUSES.
 # Lasty, the method loops through each pair of clauses to resolve possibe complementary literals.
-def resolution(belief_base, alpha):
+
+def resolution(belief_base,alpha):
+    global CLAUSES, NEW, RESOLVENTS
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
     formula = make_formula("",formula)
@@ -131,6 +134,7 @@ def resolution(belief_base, alpha):
         for c1 in CLAUSES:
             for c2 in CLAUSES.copy():
                 if c1 != c2 and CLAUSES.index(c2) > CLAUSES.index(c1):
+                    print("c1",c1,"c2",c2)
                     r = resolve(c1,c2)
                     LITERALS1.clear()
                     LITERALS2.clear()
@@ -141,11 +145,13 @@ def resolution(belief_base, alpha):
         NEW.extend(RESOLVENTS)
         RESOLVENTS.clear()
         print("CLAUSE",CLAUSES)
+        print("NEW",NEW)
         if set(NEW).issubset(CLAUSES):
             return False # KB does not entail alpha
         
         CLAUSES.extend(NEW)
         NEW.clear()
+        CLAUSES = list(set(CLAUSES))
 
 
 # iterates over the formula until no changes are made (there are no impications or biimplications to eliminate)
