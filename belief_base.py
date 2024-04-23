@@ -54,8 +54,8 @@ def entrenchment(B, belief):
 
 def count_operator(clause, c=0):
     for sub in clause:
-        if isinstance(sub, Or):
+        if isinstance(sub, 'Or'):
             c = c + count_operator(sub.args, c+1) + len(sub.atoms()) - 1
-        elif isinstance(sub, And):
+        elif isinstance(sub, 'And'):
             c = c + count_operator(sub.args, c-1)
     return c
