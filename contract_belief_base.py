@@ -30,9 +30,6 @@ def contract_belief_base(belief_base, priority_order, alpha):
     #Simulate the resolution function to check if the base still intails alpha
     if not resolution(list(temp_belief_base.formulas.keys()), alpha):
         return set(temp_belief_base.formulas.keys())    #Return modified formulas as a set
-
-    #new_belief_base = BeliefBase()
-    #new_belief_base.formulas = formulas_set
     
     ## Return the original belief base if contraction is not possible (unchanged as contraction was not successful)
     return set(belief_base.formulas.keys()) 

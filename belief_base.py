@@ -42,4 +42,3 @@ class BeliefBase:
     def query_formula(self, formula):
         return formula in self.formulas
     
-
