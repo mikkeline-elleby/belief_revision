@@ -2,18 +2,15 @@ from entailment import resolution
 
 class BeliefBase: 
     def __init__(self):
-        self.formulas = set()
+        self.formulas = {}  #Change to dictionary to store formulas with priority
 
     def add_formula(self, formula, priority):
-        self.formulas.add(formula)
+        self.formulas[formula] = priority
         return self
-    
-    def revise(self, formula):
-        ...
 
     def remove_formula(self, formula):
         if formula in self.formulas:
-            self.formulas.remove(formula)
+            del self.formulas[formula]
 
     def contract_formula(self, alpha):
         #Check if alpha is directly in the belief base
@@ -43,7 +40,7 @@ class BeliefBase:
     def query_formula(self, formula):
         return formula in self.formulas
     
-def entrenchment(B, belief):
+"""def entrenchment(B, belief):
     if belief.entrenchment is None:
         n_entrenchment = 1
         n_letters = belief.formula.atoms()
@@ -65,4 +62,4 @@ def count_operator(clause, c=0):
             c = c + count_operator(sub.args, c+1) + len(sub.atoms()) - 1
         elif isinstance(sub, 'And'):
             c = c + count_operator(sub.args, c-1)
-    return c
+    return c"""
