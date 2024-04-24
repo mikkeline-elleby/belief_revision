@@ -147,9 +147,10 @@ class BeliefBase:
         B_old = deepcopy(self)
 
         #levi identity
-        self.contraction(alpha)
+        negated_alpha = "not(" + alpha + ")"
+        self.contraction(negated_alpha)
         self.expansion(alpha)
-        print(f"Belief set after revision {self.formulas}")
+
 
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, alpha, self)
