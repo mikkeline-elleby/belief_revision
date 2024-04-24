@@ -112,7 +112,7 @@ class BeliefBase:
         for sub_set in subset_of_set:
             # print("sub set +++",sub_set)
             new_sub_set = sub_set.split('|')
-            if not resolution(new_sub_set, negation(alpha)):
+            if not resolution(new_sub_set, alpha):
                 #print(alpha, "does not entail",sub_set)
                 valid_set.append(sub_set)
                 #print("updated valid set: ",valid_set)
