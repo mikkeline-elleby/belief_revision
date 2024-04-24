@@ -74,10 +74,10 @@ def consistency_postulate(p, B_new):
     """B revised by p is consistent if p is consistent"""
     # check if belief p is consistent
 
-    if check_consistency({""}, p):
+    if check_consistency(p):
 
         # check is new belief set is consistent
-        if check_consistency(B_new.formulas, "") == "consistent":
+        if check_consistency(B_new.formulas):
             return "success"
         else:
             print(f"Consistency Postulate not satisfied by B * {p}")
@@ -112,8 +112,12 @@ def extenstionality_postulate(B_old, p, B_new):
 # AGM Postulates helper functions #
 ###################################
 
-def check_consistency(B, p):
-    ...
+def check_consistency(belief_set):
+    for x in belief_set:
+        if "not" not in x:
+            return True
+        
+    return False
 
 def find_equivalence(p, formula):
     if formula[0:2] == "bi":

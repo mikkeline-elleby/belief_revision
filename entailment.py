@@ -113,24 +113,20 @@ def to_clauses(formula):
 def resolution(belief_base,alpha):
     global CLAUSES, NEW, RESOLVENTS
 
-
-
     CLAUSES, NEW, RESOLVENTS = [], set(), set() #BUGGGG NEED REINITIALISATION  !!
-
-
 
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
     formula = make_formula("",formula)
     formula = convert_to_CNF(formula)
 
-    #print("CNF convertion completed. The sentence is:\n", formula)
+    print("CNF convertion completed. The sentence is:\n", formula)
     to_clauses(formula)
     #print("\nThe clauses are:",CLAUSES)
 
     # if there is ony one clause, then we cannot obtain the empty clause
     if len(CLAUSES) == 1:
-        print(f"Belief Base does not entail {alpha}")
+        print(f"Entailment: Belief Base too small - does not entail \'{alpha}\'")
         return False # KB does not entail alpha
 
 
@@ -149,14 +145,14 @@ def resolution(belief_base,alpha):
                     if r != None:
                         RESOLVENTS.add(r)
                     if "empty" in RESOLVENTS:
-                        print(f"Belief Base entails {alpha}")
+                        print(f"Entailment: Belief Base entails \'{alpha}\'")
                         return True # KB entails alpha
                     NEW = NEW.union(RESOLVENTS)
         #RESOLVENTS.clear()
         #print("CLAUSE",CLAUSES)
         #print("NEW",NEW)
-        if NEW.issubset(CLAUSES):
-            print(f"Belief Base does not entail {alpha}")
+        if set(NEW).issubset(CLAUSES):
+            print(f"Entailment: Belief Base does not entail \'{alpha}\'")
             return False # KB does not entail alpha
 
         CLAUSES = list(set(CLAUSES).union(NEW))
@@ -331,13 +327,23 @@ def distributive_laws(formula):
         return formula
 
 if __name__ == '__main__':
-    pass
-    print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
-    #print(resolution(['p'],"p"))
-    #print(resolution(['p'],"q"))
-    #print(distributive_laws("or(a,and(b,c))")) #should give and(or(a,b),or(a,c))
-    #print(distributive_laws("or(and(a,b),c)")) #should give and(or(a,c),or(b,c))
-    #print(eliminate_double_negation("and(p,not(not(s)))"))
-    #print(de_morgans("and(p,not(or(w,e)))"))
-    #convert_to_CNF(["and(p,q)","not(a)","or(a,b)", "or(not(a),b)","bi(not(p),a)", "imp(a,and(b,q))"],"or(p,t)")
+    print()
+
+    print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"), "\n")
+
+    print(resolution(['p'],"p"), "\n")
+
+    print(resolution(['p'],"q"), "\n")
+
+    print(distributive_laws("or(a,and(b,c))"), "\n") #should give and(or(a,b),or(a,c))
+    assert distributive_laws("or(a,and(b,c))") == "and(or(a,b),or(a,c))"
+
+    print(distributive_laws("or(and(a,b),c)"), "\n") #should give and(or(a,c),or(b,c))
+    assert distributive_laws("or(and(a,b),c)") == 'and(or(a,c),or(b,c))'
+
+    print(eliminate_double_negation("and(p,not(not(s)))"), "\n")
+
+    print(de_morgans("and(p,not(or(w,e)))"), "\n")
+
+    # convert_to_CNF(["and(p,q)","not(a)","or(a,b)", "or(not(a),b)","bi(not(p),a)", "imp(a,and(b,q))"],"or(p,t)")
 

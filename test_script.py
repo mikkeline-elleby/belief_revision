@@ -1,4 +1,4 @@
-from belief_base import BeliefBase
+from belief_base import *
 from formulas import *
 import copy
 
@@ -34,11 +34,14 @@ print("end formula:", B.formulas)
 print("Revision 4 ==== added q")
 B.revision(formula2)
 print(B.formulas)
+print("end formula:", B.formulas)
 
 print("Revision 5 ==== added or(p,q)")
 B.revision(formula4)
 print(B.formulas)
+print("end formula:", B.formulas)
 
 print("Revision 6 ==== added not(q)")
 B.revision(formula5)
 print(B.formulas)
+print("end formula:", B.formulas)
