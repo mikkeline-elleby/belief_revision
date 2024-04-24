@@ -131,13 +131,13 @@ class BeliefBase:
                     #print(score)
                     score += entrenchment(elem)
                     #print(score)
-                print(i, " has a score of ", score )
+                #print(i, " has a score of ", score )
                 if score >= best_score:
                     best_set = i
                     best_score = score
                     #print("score ", score, "best score", best_score)
 
-            print("best set:", best_set, "best set type:", type(best_set))
+            #print("best set:", best_set, "best set type:", type(best_set))
             self.formulas = set(best_set)
             #print(self.formulas)
             return 

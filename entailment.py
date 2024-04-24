@@ -120,13 +120,13 @@ def resolution(belief_base,alpha):
     formula = make_formula("",formula)
     formula = convert_to_CNF(formula)
 
-    print("CNF convertion completed. The sentence is:\n", formula)
+    #print("CNF convertion completed. The sentence is:\n", formula)
     to_clauses(formula)
     #print("\nThe clauses are:",CLAUSES)
 
     # if there is ony one clause, then we cannot obtain the empty clause
     if len(CLAUSES) == 1:
-        print(f"Entailment: Belief Base too small - does not entail \'{alpha}\'")
+        #print(f"Entailment: Belief Base too small - does not entail \'{alpha}\'")
         return False # KB does not entail alpha
 
 
@@ -145,14 +145,14 @@ def resolution(belief_base,alpha):
                     if r != None:
                         RESOLVENTS.add(r)
                     if "empty" in RESOLVENTS:
-                        print(f"Entailment: Belief Base entails \'{alpha}\'")
+                        #print(f"Entailment: Belief Base entails \'{alpha}\'")
                         return True # KB entails alpha
                     NEW = NEW.union(RESOLVENTS)
         #RESOLVENTS.clear()
         #print("CLAUSE",CLAUSES)
         #print("NEW",NEW)
         if set(NEW).issubset(CLAUSES):
-            print(f"Entailment: Belief Base does not entail \'{alpha}\'")
+            #print(f"Entailment: Belief Base does not entail \'{alpha}\'")
             return False # KB does not entail alpha
 
         CLAUSES = list(set(CLAUSES).union(NEW))
