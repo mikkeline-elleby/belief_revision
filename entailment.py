@@ -151,8 +151,8 @@ def resolution(belief_base,alpha):
                     if "empty" in RESOLVENTS:
                         print(f"Belief Base entails {alpha}")
                         return True # KB entails alpha
-        NEW.extend(RESOLVENTS)
-        RESOLVENTS.clear()
+                    NEW.extend(RESOLVENTS)
+        #RESOLVENTS.clear()
         #print("CLAUSE",CLAUSES)
         #print("NEW",NEW)
         if set(NEW).issubset(CLAUSES):
@@ -160,7 +160,7 @@ def resolution(belief_base,alpha):
             return False # KB does not entail alpha
 
         CLAUSES.extend(NEW)
-        NEW.clear()
+        #NEW.clear()
         CLAUSES = list(set(CLAUSES))
 
 
