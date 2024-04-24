@@ -2,6 +2,7 @@
 
 from entailment import resolution  
 import itertools
+from itertools import combinations
 import re
 from copy import deepcopy
 from agm_postulates import check_agm_revision_postulates
@@ -74,17 +75,12 @@ def entrenchment(formula_str):
     satisfiable_count = sum(evaluate_formula(formula, dict(zip(variables, assignment))) for assignment in truth_assignments)
     return satisfiable_count
 
-def subset_of_set(s, size):
-    #finds the subset of a set
-    if size <= 0 or len(s) == 0 or size > len(s):
-        return set()
-
-    if size == len(s):
-        return s
-
-    without_element = subset_of_set(s[1:], size)
-    with_element = {frozenset({next(iter(s))}).union(e) for e in subset_of_set(s[1:], size - 1)}
-    return with_element.union(without_element)
+def generate_subsets(input_set):
+    all_subsets = []
+    for subset_length in range(1, len(input_set) + 1):
+        for subset in combinations(input_set, subset_length):
+            all_subsets.append("|".join(subset))
+    return all_subsets
 
 ##############################################################################################
 
@@ -104,39 +100,50 @@ class BeliefBase:
     def contraction(self, alpha):
         #alpha is removed from the belief base.
 
-        for length in range(len(self.formulas), 0, -1):
-            valid_set = set()
-            
-            for sub_set in subset_of_set(self.formulas, length):
-                if not resolution([sub_set], alpha):
-                    valid_set.add(sub_set)
+        valid_set = []
+        subset_of_set = generate_subsets(self.formulas)
+        #print("sub set +++",subset_of_set)
 
-            if len(valid_set) > 0:
-                best_set = set()
-                best_score = 0
+        for sub_set in subset_of_set:
+            #print("sub set +++",sub_set)
 
-                for elem in valid_set:
-                    score = entrenchment(elem)
-                    if score > best_score:
-                        best_set = elem
-                        best_score = score
+            if not resolution([sub_set], alpha):
+                #print(alpha, "does not entail",sub_set)
+                valid_set.append(sub_set)
+                #print("updated valid set: ",valid_set)
 
-                self.formulas = set(best_set)
-                return 
+        if len(valid_set) > 0:
+            best_set = []
+            best_score = 0
+
+            for i in valid_set:
+                if len(i)>1 : 
+                    i = i.split('|')
+
+                score = 0 
+                for elem in i:
+                    #print(elem) 
+                    #print(score)
+                    score += entrenchment(elem)
+                    #print(score)
+                print(i, " has a score of ", score )
+                if score >= best_score:
+                    best_set = i
+                    best_score = score
+                    #print("score ", score, "best score", best_score)
+
+            self.formulas = set(best_set)
+            #print(self.formulas)
+            return 
 
     def revision(self, alpha):
         # make copy of belief base for AGM checking
         B_old = deepcopy(self)
         
-        # check resolution to determine if revision is needed
-        if resolution(list(self.formulas), alpha):
-            return 
-        
-        else:
-            #levi identity
-            negated_alpha = "not(" + alpha + ")"
-            self.contraction(negated_alpha)
-            self.expansion(alpha)
+        #levi identity
+        negated_alpha = "not(" + alpha + ")"
+        self.contraction(negated_alpha)
+        self.expansion(alpha)
         
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, alpha, self)
