@@ -75,12 +75,6 @@ def entrenchment(formula_str):
     satisfiable_count = sum(evaluate_formula(formula, dict(zip(variables, assignment))) for assignment in truth_assignments)
     return satisfiable_count
 
-# Example usage
-formula_str = "p"
-
-satisfiable_count = entrenchment(formula_str)
-print("Number of satisfiable formulas:", satisfiable_count)
-
 def subset_of_set(s, size):
     #finds the subset of a set
     if size <= 0 or len(s) == 0 or size > len(s):
@@ -110,27 +104,23 @@ class BeliefBase:
         #alpha is removed from the belief base.
 
         for length in range(len(self.formulas), 0, -1):
-            valid_kb = set()
+            valid_set = set()
             
-            for sub_kb in subset_of_set(self.formulas, length):
-                print(sub_kb)
-                negated_alpha = "not(" + alpha + ")"
-                print(negated_alpha)
-                if not resolution([sub_kb], alpha):
-                    valid_kb.add(sub_kb)
+            for sub_set in subset_of_set(self.formulas, length):
+                if not resolution([sub_set], alpha):
+                    valid_set.add(sub_set)
 
-            if len(valid_kb) > 0:
-                best_kb = set()
+            if len(valid_set) > 0:
+                best_set = set()
                 best_score = 0
 
-                for kb in valid_kb:
-                    score = entrenchment(kb)
+                for elem in valid_set:
+                    score = entrenchment(elem)
                     if score > best_score:
-                        best_kb = kb
+                        best_set = elem
                         best_score = score
-                        print(best_kb)
 
-                self.formulas = set(best_kb)
+                self.formulas = set(best_set)
                 return 
 
     def revision(self, new_formula):

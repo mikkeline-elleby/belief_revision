@@ -1,7 +1,5 @@
 from belief_base import BeliefBase
 from formulas import *
-from agm_postulates import check_agm_revision_postulates
-
 import copy
 
 # script for testing
