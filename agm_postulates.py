@@ -1,7 +1,7 @@
 # AGM postulates for revision
 
 from formulas import *
-from belief_base import BeliefBase
+from belief_base import *
 from copy import deepcopy
 
 def check_agm_revision_postulates(belief_set, belief, new_belief_set):
@@ -18,7 +18,7 @@ def check_agm_revision_postulates(belief_set, belief, new_belief_set):
     result.append(success_postulate(p, B_new))
     result.append(inclusion_postulate(B, p, B_new))
     result.append(vacuity_postulate(B, p, B_new))
-    result.append(consistency_postulate(p, B_new))
+    #Sresult.append(consistency_postulate(p, B_new))
     result.append(extenstionality_postulate(B, p, B_new))
 
     # determine the successes
@@ -41,7 +41,7 @@ def success_postulate(p, B_new):
 def inclusion_postulate(B, p, B_new):
     """B revised by p - is a subset of B expanded by p"""
 
-    B.add_formula(p, 1)
+    B.expansion(p)
 
     # check if all sentences of new belief set is present in previous belief set
     for x in B_new.formulas:
@@ -62,17 +62,17 @@ def vacuity_postulate(B, p, B_new):
             return "neutral"
 
     # if not p not present B_new == B + p
-    B.add_formula(p, 1)
+    B.expansion(p)
     if B == B_new:
         return "success"
     else:
         print(f"Vacuity Postulate not satisfied by B * {p}")
         return "failure"
 
-
+'''
+TODO : NOT FULLY IMPLEMENTED 
 def consistency_postulate(p, B_new):
     """B revised by p is consistent if p is consistent"""
-
     # check is belief p is consistent
     if check_consistency(BeliefBase(), p):
         # check is new belief set is consistent
@@ -84,7 +84,7 @@ def consistency_postulate(p, B_new):
     
     # new belief in inconsistent
     return "neutral"
-
+'''
 
 def extenstionality_postulate(B, p, B_new):
     """If p <-> q in Cn(Ø), then B * p == B * q"""

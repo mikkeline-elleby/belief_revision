@@ -75,15 +75,15 @@ def resolve(c1,c2):
 
     for l1 in LITERALS1:
         for l2 in LITERALS2:
-            print("l1",l1,"l2",l2)
+            #print("l1",l1,"l2",l2)
             if l1 == "not(" + l2 + ")" or l2 == "not(" + l1 + ")":
-                print("resolved", l1,"and",l2,"with",c1,"and",c2)
+                #print("resolved", l1,"and",l2,"with",c1,"and",c2)
                 #print(CLAUSES)
 
                 LITERALS1.remove(l1)
                 LITERALS2.remove(l2)
                 new_literals = LITERALS1+LITERALS2
-                print("new_literals",new_literals)
+                #print("new_literals",new_literals)
                 
                 if len(new_literals) == 0:
                     return "empty"
@@ -112,14 +112,15 @@ def to_clauses(formula):
 
 def resolution(belief_base,alpha):
     global CLAUSES, NEW, RESOLVENTS
+    CLAUSES, NEW, RESOLVENTS = [], [], [] #BUGGGG NEED REINITIALISATION  !! 
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
     formula = make_formula("",formula)
     formula = convert_to_CNF(formula)
 
-    print("CNF convertion completed. The sentence is:\n", formula)
+    #print("CNF convertion completed. The sentence is:\n", formula)
     to_clauses(formula)
-    print("\nThe clauses are:",CLAUSES)
+    #print("\nThe clauses are:",CLAUSES)
 
     # if there is ony one clause, then we cannot obtain the empty clause
     if len(CLAUSES) == 1:
@@ -134,7 +135,7 @@ def resolution(belief_base,alpha):
         for c1 in CLAUSES:
             for c2 in CLAUSES.copy():
                 if c1 != c2 and CLAUSES.index(c2) > CLAUSES.index(c1):
-                    print("c1",c1,"c2",c2)
+                    #print("c1",c1,"c2",c2)
                     r = resolve(c1,c2)
                     LITERALS1.clear()
                     LITERALS2.clear()
@@ -144,8 +145,8 @@ def resolution(belief_base,alpha):
                         return True # KB entails alpha
         NEW.extend(RESOLVENTS)
         RESOLVENTS.clear()
-        print("CLAUSE",CLAUSES)
-        print("NEW",NEW)
+        #print("CLAUSE",CLAUSES)
+        #print("NEW",NEW)
         if set(NEW).issubset(CLAUSES):
             return False # KB does not entail alpha
         
@@ -323,7 +324,10 @@ def distributive_laws(formula):
         return formula
 
 if __name__ == '__main__':  
-    print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
+    pass
+    #print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
+    #print(resolution(['p'],"p"))
+    #print(resolution(['p'],"q"))
     #print(distributive_laws("or(a,and(b,c))")) #should give and(or(a,b),or(a,c))
     #print(distributive_laws("or(and(a,b),c)")) #should give and(or(a,c),or(b,c))
     #print(eliminate_double_negation("and(p,not(not(s)))"))    

@@ -1,10 +1,6 @@
 # main.py
 
 from belief_base import BeliefBase
-from contract_belief_base import contract_belief_base
-from revision_operations import belief_revision
-from contract_belief_base import contract_belief_base, expand_belief_base
-from revision_operations import *
 from entailment import resolution
 
 # Your main logic for belief revision goes here
@@ -35,11 +31,11 @@ def main():
                 print(f"The formula '{formula}' is not entailed by the belief base.")
         elif choice == '2':
             formula_to_remove = input("Enter the formula to remove from the belief base: ")
-            belief_base = contract_belief_base(belief_base, formula_to_remove) #need to add priority 
+            belief_base.contraction(formula_to_remove) #need to add priority 
             print("Belief base after contraction:", belief_base)
         elif choice == '3':
             formula_to_add = input("Enter the formula to add to the belief base: ")
-            belief_base = expand_belief_base(belief_base, formula_to_add)
+            belief_base.expansion(formula_to_add)
             print("Belief base after expansion:", belief_base)
         elif choice == '4':
             print("Exiting...")
