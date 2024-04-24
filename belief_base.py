@@ -124,18 +124,20 @@ class BeliefBase:
                 self.formulas = set(best_set)
                 return 
 
-    def revision(self, new_formula):
+    def revision(self, alpha):
         # make copy of belief base for AGM checking
         B_old = deepcopy(self)
         
         # check resolution to determine if revision is needed
-        if resolution(list(self.formulas), new_formula):
+        if resolution(list(self.formulas), alpha):
             return 
         
         else:
-            self.contraction(new_formula)
-            self.expansion(new_formula)
+            #levi identity
+            negated_alpha = "not(" + alpha + ")"
+            self.contraction(negated_alpha)
+            self.expansion(alpha)
         
         # check AGM postulates between old and new belief set, as well as sentence
-        check_agm_revision_postulates(B_old, new_formula, self)
+        check_agm_revision_postulates(B_old, alpha, self)
         return 
