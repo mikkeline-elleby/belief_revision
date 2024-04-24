@@ -3,8 +3,6 @@
 from belief_base import BeliefBase
 from entailment import resolution
 
-# Your main logic for belief revision goes here
-
 def main():
     # Create initial belief base
     belief_base = BeliefBase()
@@ -31,7 +29,7 @@ def main():
                 print(f"The formula '{formula}' is not entailed by the belief base.")
         elif choice == '2':
             formula_to_remove = input("Enter the formula to remove from the belief base: ")
-            belief_base.contraction(formula_to_remove) 
+            belief_base.contraction(formula_to_remove)
             print("Belief base after contraction:", belief_base)
         elif choice == '3':
             formula_to_add = input("Enter the formula to add to the belief base: ")

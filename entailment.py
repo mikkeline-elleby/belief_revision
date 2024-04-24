@@ -1,11 +1,11 @@
 # entailment.py
 
 # to call this file the method resolution() should be called. This takes a belief base and an alpha and will firstly convert
-# and(KB,not(alpha)) into CNF and then perform the resolution algorithm. 
+# and(KB,not(alpha)) into CNF and then perform the resolution algorithm.
 
 CLAUSES = []
-NEW = []
-RESOLVENTS = []
+NEW = set()
+RESOLVENTS = set()
 LITERALS1 = []
 LITERALS2 = []
 
@@ -27,7 +27,7 @@ def make_formula(f,belief_base):
         b = belief_base[0]
         f = "and(" + b + "," + make_formula(f,belief_base[1:])
         return f + ")"
-    
+
 
 # makes sure that the comma (seperating the elements of a function fx the and-function) corresponds to the correct function
 def matching_comma(formula):
@@ -51,14 +51,14 @@ def to_literals(formula,id):
         B = formula[comma_index+1:-1]
         to_literals(A,id)
         to_literals(B,id)
-    
+
     else:
         if id == "1":
             LITERALS1.append(formula)
-        else: 
+        else:
             LITERALS2.append(formula)
 
-# convert a list of literals into a clause 
+# convert a list of literals into a clause
 def from_literals_to_clause(f,literals):
     if len(literals) == 1:
         return literals[0]
@@ -84,7 +84,7 @@ def resolve(c1,c2):
                 LITERALS2.remove(l2)
                 new_literals = LITERALS1+LITERALS2
                 #print("new_literals",new_literals)
-                
+
                 if len(new_literals) == 0:
                     return "empty"
 
@@ -101,7 +101,7 @@ def to_clauses(formula):
         B = formula[comma_index+1:-1]
         to_clauses(A)
         to_clauses(B)
-    
+
     else:
         CLAUSES.append(formula)
 
@@ -115,10 +115,10 @@ def resolution(belief_base,alpha):
 
 
 
-    CLAUSES, NEW, RESOLVENTS = [], [], [] #BUGGGG NEED REINITIALISATION  !! 
+    CLAUSES, NEW, RESOLVENTS = [], set(), set() #BUGGGG NEED REINITIALISATION  !!
 
 
-    
+
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
     formula = make_formula("",formula)
@@ -130,8 +130,9 @@ def resolution(belief_base,alpha):
 
     # if there is ony one clause, then we cannot obtain the empty clause
     if len(CLAUSES) == 1:
+        print(f"Belief Base does not entail {alpha}")
         return False # KB does not entail alpha
-    
+
 
     # for each pair of clauses in CLAUSES we resolve the clauses, return true if we obtain the empty clause,
     # otherwise we unify NEW and RESOLVENTS (and empty RESOLVENTS), if NEW is just a subset of CLAUSES we return False,
@@ -146,19 +147,19 @@ def resolution(belief_base,alpha):
                     LITERALS1.clear()
                     LITERALS2.clear()
                     if r != None:
-                        RESOLVENTS.append(r) 
+                        RESOLVENTS.add(r)
                     if "empty" in RESOLVENTS:
+                        print(f"Belief Base entails {alpha}")
                         return True # KB entails alpha
-        NEW.extend(RESOLVENTS)
-        RESOLVENTS.clear()
+                    NEW = NEW.union(RESOLVENTS)
+        #RESOLVENTS.clear()
         #print("CLAUSE",CLAUSES)
         #print("NEW",NEW)
-        if set(NEW).issubset(CLAUSES):
+        if NEW.issubset(CLAUSES):
+            print(f"Belief Base does not entail {alpha}")
             return False # KB does not entail alpha
-        
-        CLAUSES.extend(NEW)
-        NEW.clear()
-        CLAUSES = list(set(CLAUSES))
+
+        CLAUSES = list(set(CLAUSES).union(NEW))
 
 
 # iterates over the formula until no changes are made (there are no impications or biimplications to eliminate)
@@ -180,14 +181,14 @@ def eliminate_bi_and_imp(formula):
         A = eliminate_bi_and_imp(A)
         B = eliminate_bi_and_imp(B)
         return "and(imp(" + A + "," + B + "),imp(" + B + "," + A + "))"
-    
+
     # in the case of an implication we substitute it with its logically equivallent function: not(or(a,b))
     elif formula[0:3] == "imp":
         comma_index = matching_comma(formula)
         A = formula[4:comma_index]
         B = formula[comma_index+1:-1]
         return "or(not(" + eliminate_bi_and_imp(A) + ")," + eliminate_bi_and_imp(B) + ")"
-    
+
     # a simple conjunction or disjunctions
     elif formula[0:3] == "and" or formula[0:2] == "or":
         comma_index = matching_comma(formula)
@@ -195,12 +196,12 @@ def eliminate_bi_and_imp(formula):
         A = formula[parentises_index+1:comma_index]
         B = formula[comma_index+1:-1]
         return formula[:parentises_index+1] + eliminate_bi_and_imp(A) + "," + eliminate_bi_and_imp(B) + ")"
-    
+
     # a simple negation
     elif formula[0:3] == "not":
         index = formula.index("(")
         return "not(" + eliminate_bi_and_imp(formula[index+1:-1]) + ")"
-    
+
     # in the "otherwise" case the formula is a symbol and is returned
     else:
         return formula
@@ -228,20 +229,20 @@ def de_morgans(formula):
         A = formula[7:comma_index]
         B = formula[comma_index+1:-2]
         return "and(not(" + de_morgans(A) + "),not(" + de_morgans(B) + "))"
-    
+
     # a simple negation
     elif formula[0:3] == "not":
         index = formula.index("(")
         return "not(" + de_morgans(formula[index+1:-1]) + ")"
 
     # a simple conjunction or disjunction
-    elif formula[0:3] == "and" or formula[0:2] == "or": 
+    elif formula[0:3] == "and" or formula[0:2] == "or":
         comma_index = matching_comma(formula)
         parentises_index = formula.index("(")
         A = formula[parentises_index+1:comma_index]
         B = formula[comma_index+1:-1]
         return formula[:parentises_index+1] + de_morgans(A) + "," + de_morgans(B) + ")"
-    
+
     # in the "otherwise" case the formula is a symbol and is returned
     else:
         return formula
@@ -259,7 +260,7 @@ def eliminate_double_negation(formula):
     # in the case of a double negation
     if formula[0:7] == "not(not":
         return eliminate_double_negation(formula[8:-2])
-    
+
     # a simple conjunction or disjunction
     elif formula[0:3] == "and" or formula[0:2] == "or":
         comma_index = matching_comma(formula)
@@ -267,11 +268,11 @@ def eliminate_double_negation(formula):
         A = formula[parentises_index+1:comma_index]
         B = formula[comma_index+1:-1]
         return formula[:parentises_index+1] + eliminate_double_negation(A) + "," + eliminate_double_negation(B) + ")"
-    
+
     # a simple negation
     elif formula[0:3] == "not":
         return "not(" + eliminate_double_negation(formula[4:-1]) + ")"
-    
+
     # in the "otherwise" case the formula is a symbol and is returned
     else:
         return formula
@@ -289,29 +290,29 @@ def distributive_laws_helper(formula):
 def distributive_laws(formula):
     if formula[0:2] == "or":
         comma_index = matching_comma(formula)
-        
-        # the first distributive law "A or (B and C) is logically equivalent to (A or B) and (A or C)" 
+
+        # the first distributive law "A or (B and C) is logically equivalent to (A or B) and (A or C)"
         if formula[comma_index+1:comma_index+4] == "and":
             A = formula[3:comma_index]
             comma_index2 = matching_comma(formula[comma_index+1:-1]) + comma_index + 1
             B = formula[comma_index+5:comma_index2]
             C = formula[comma_index2+1:-2]
             return "and(or(" + distributive_laws(A) + "," + distributive_laws(B) + "),or(" + distributive_laws(A) + "," + distributive_laws(C) + "))"
-        
-        # the second distributive law "(A and B) or C) is logically equivalent to (A or C) and (B or C)" 
+
+        # the second distributive law "(A and B) or C) is logically equivalent to (A or C) and (B or C)"
         elif formula[3:6] == "and":
             comma_index2 = matching_comma(formula[3:-1]) + 3
             A = formula[7:comma_index2]
             B = formula[comma_index2+1:comma_index-1]
             C = formula[comma_index+1:-1]
             return "and(or(" + distributive_laws(A) + "," + distributive_laws(C) + "),or(" + distributive_laws(B) + "," + distributive_laws(C) + "))"
-        
+
         else:
             # the case when the disjunction does not contain any conjunctions
             A = formula[3:comma_index]
             B = formula[comma_index+1:-1]
             return "or(" + distributive_laws(A) + "," + distributive_laws(B) + ")"
-    
+
     # a simple conjunction
     elif formula[0:3] == "and":
         comma_index = matching_comma(formula)
@@ -319,7 +320,7 @@ def distributive_laws(formula):
         A = formula[parentises_index+1:comma_index]
         B = formula[comma_index+1:-1]
         return formula[:parentises_index+1] + distributive_laws(A) + "," + distributive_laws(B) + ")"
-    
+
     # a simple negation
     elif formula[0:3] == "not":
         index = formula.index("(")
@@ -329,14 +330,14 @@ def distributive_laws(formula):
     else:
         return formula
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     pass
-    #print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
+    print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
     #print(resolution(['p'],"p"))
     #print(resolution(['p'],"q"))
     #print(distributive_laws("or(a,and(b,c))")) #should give and(or(a,b),or(a,c))
     #print(distributive_laws("or(and(a,b),c)")) #should give and(or(a,c),or(b,c))
-    #print(eliminate_double_negation("and(p,not(not(s)))"))    
+    #print(eliminate_double_negation("and(p,not(not(s)))"))
     #print(de_morgans("and(p,not(or(w,e)))"))
     #convert_to_CNF(["and(p,q)","not(a)","or(a,b)", "or(not(a),b)","bi(not(p),a)", "imp(a,and(b,q))"],"or(p,t)")
 

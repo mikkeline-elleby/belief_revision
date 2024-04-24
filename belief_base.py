@@ -1,10 +1,14 @@
 # belief_base.py
 
-from entailment import resolution  
+# importing python tools
 import itertools
 from itertools import combinations
 import re
 from copy import deepcopy
+
+# importing project components
+from entailment import resolution
+from formulas import *
 from agm_postulates import check_agm_revision_postulates
 
 VARIABLE_REGEX = re.compile(r"and|or|not|imp|bi|([a-zA-Z])")
@@ -30,7 +34,7 @@ def create_valid_formula(variables):
         if parenthesis_valid(','.join(current_variable)):
             new_variables.append(','.join(current_variable))
             current_variable = []
-    
+
     return new_variables
 
 
@@ -43,7 +47,7 @@ def parse_formula(formula):
 def evaluate_formula(formula, truth_assignment):
     operator, variables = formula
 
-    if variables == [''] : 
+    if variables == [''] :
         return truth_assignment[operator]
 
     def evaluate(var):
@@ -68,7 +72,7 @@ def find_variable(formula):
     return variables
 
 def entrenchment(formula_str):
-    #count number of satisfiable formulas 
+    #count number of satisfiable formulas
     formula = parse_formula(formula_str)
     variables = find_variable(formula_str)
     truth_assignments = itertools.product([True, False], repeat=len(variables))
@@ -82,20 +86,21 @@ def generate_subsets(input_set):
             all_subsets.append("|".join(subset))
     return all_subsets
 
-##############################################################################################
-
-#  CLASS BELIEF BASE 
 
 ##############################################################################################
 
-class BeliefBase: 
+#  CLASS BELIEF BASE
+
+##############################################################################################
+
+class BeliefBase:
     def __init__(self):
-        self.formulas = set()  # STILL SET :P 
+        self.formulas = set()
 
     def expansion(self, alpha):
-        #add alpha to the belief base 
+        #add alpha to the belief base
         self.formulas.add(alpha)
-        return self
+        return
 
     def contraction(self, alpha):
         #alpha is removed from the belief base.
@@ -147,4 +152,9 @@ class BeliefBase:
         
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, alpha, self)
-        return 
+
+        return
+
+    def __eq__(self, value: object) -> bool:
+        """Used for comparing belief base instances only based on belief set"""
+        return self.formulas == value.formulas
