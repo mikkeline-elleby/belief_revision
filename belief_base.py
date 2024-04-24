@@ -1,9 +1,13 @@
 # belief_base.py
 
-from entailment import resolution  
+# importing python tools
 import itertools
 import re
 from copy import deepcopy
+
+# importing project components
+from entailment import resolution
+from formulas import *
 from agm_postulates import check_agm_revision_postulates
 
 VARIABLE_REGEX = re.compile(r"and|or|not|imp|bi|([a-zA-Z])")
@@ -29,7 +33,7 @@ def create_valid_formula(variables):
         if parenthesis_valid(','.join(current_variable)):
             new_variables.append(','.join(current_variable))
             current_variable = []
-    
+
     return new_variables
 
 
@@ -42,7 +46,7 @@ def parse_formula(formula):
 def evaluate_formula(formula, truth_assignment):
     operator, variables = formula
 
-    if variables == [''] : 
+    if variables == [''] :
         return truth_assignment[operator]
 
     def evaluate(var):
@@ -67,7 +71,7 @@ def find_variable(formula):
     return variables
 
 def entrenchment(formula_str):
-    #count number of satisfiable formulas 
+    #count number of satisfiable formulas
     formula = parse_formula(formula_str)
     variables = find_variable(formula_str)
     truth_assignments = itertools.product([True, False], repeat=len(variables))
@@ -86,27 +90,28 @@ def subset_of_set(s, size):
     with_element = {frozenset({next(iter(s))}).union(e) for e in subset_of_set(s[1:], size - 1)}
     return with_element.union(without_element)
 
-##############################################################################################
-
-#  CLASS BELIEF BASE 
 
 ##############################################################################################
 
-class BeliefBase: 
+#  CLASS BELIEF BASE
+
+##############################################################################################
+
+class BeliefBase:
     def __init__(self):
-        self.formulas = set()  # STILL SET :P 
+        self.formulas = set()
 
     def expansion(self, alpha):
-        #add alpha to the belief base 
+        #add alpha to the belief base
         self.formulas.add(alpha)
-        return self
+        return
 
     def contraction(self, alpha):
         #alpha is removed from the belief base.
 
         for length in range(len(self.formulas), 0, -1):
             valid_set = set()
-            
+
             for sub_set in subset_of_set(self.formulas, length):
                 if not resolution([sub_set], alpha):
                     valid_set.add(sub_set)
@@ -122,22 +127,26 @@ class BeliefBase:
                         best_score = score
 
                 self.formulas = set(best_set)
-                return 
+                return
 
     def revision(self, alpha):
         # make copy of belief base for AGM checking
         B_old = deepcopy(self)
-        
+
         # check resolution to determine if revision is needed
         if resolution(list(self.formulas), alpha):
-            return 
-        
+            return
+
         else:
             #levi identity
-            negated_alpha = "not(" + alpha + ")"
-            self.contraction(negated_alpha)
+            self.contraction(negation(alpha))
             self.expansion(alpha)
-        
+
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, alpha, self)
-        return 
+
+        return
+
+    def __eq__(self, value: object) -> bool:
+        """Used for comparing belief base instances only based on belief set"""
+        return self.formulas == value.formulas

@@ -8,24 +8,30 @@ B = BeliefBase()
 p = "p"
 q = "q"
 r = "r"
+s = "s"
 
-# Example complex formulas
+
 formula1 = p
-formula2 = q
-formula3 = implication(p, conjunction(q, r))  # p → (q ∧ r)
-
-print("Revision 1")
+print(f"Revision 1: B * {formula1}")
 B.revision(formula1)
+print(f"Belief base after 1. revision: {B.formulas} \n")
 
-print("Revision 2")
+formula2 = q
+print(f"Revision 2: B * {formula2}")
 B.revision(formula2)
+print(f"Belief base after 2. revision: {B.formulas} \n")
 
-print("Revision 3")
+formula3 = conjunction(q, r)
+print(f"Revision 3: B * {formula3}")
 B.revision(formula3)
+print(f"Belief base after 3. revision: {B.formulas} \n")
 
+formula4 = conjunction(p, q)
+print(f"Revision 4: B * {formula4}")
+B.revision(formula4)
+print(f"Belief base after 4. revision: {B.formulas} \n")
 
-formula4 = conjunction("a","b")
-for x in B.formulas:
-    print(x)
-
-# B = revise.belief_revision(B, formula4)
+formula5 = implication(s, p)
+print(f"Revision 5: B * {formula5}")
+B.revision(formula5)
+print(f"Belief base after 5. revision: {B.formulas} \n")
