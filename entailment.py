@@ -112,7 +112,13 @@ def to_clauses(formula):
 
 def resolution(belief_base,alpha):
     global CLAUSES, NEW, RESOLVENTS
+
+
+
     CLAUSES, NEW, RESOLVENTS = [], [], [] #BUGGGG NEED REINITIALISATION  !! 
+
+
+    
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
     formula = make_formula("",formula)

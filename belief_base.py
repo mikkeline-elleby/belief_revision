@@ -40,7 +40,6 @@ def parse_formula(formula):
     return operator, variables
 
 def evaluate_formula(formula, truth_assignment):
-
     operator, variables = formula
 
     if variables == [''] : 
