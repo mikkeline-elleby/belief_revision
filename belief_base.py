@@ -146,15 +146,10 @@ class BeliefBase:
         # make copy of belief base for AGM checking
         B_old = deepcopy(self)
 
-        # check resolution to determine if revision is needed
-        if resolution(list(self.formulas), alpha):
-            print(f"The belief set already entails {alpha}")
-            return
-        else:
-            #levi identity
-            self.contraction(alpha)
-            self.expansion(alpha)
-            print(f"Belief set after revision {self.formulas}")
+        #levi identity
+        self.contraction(alpha)
+        self.expansion(alpha)
+        print(f"Belief set after revision {self.formulas}")
 
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, alpha, self)
