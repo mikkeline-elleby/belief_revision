@@ -110,9 +110,9 @@ class BeliefBase:
         #print("sub set +++",subset_of_set)
 
         for sub_set in subset_of_set:
-            #print("sub set +++",sub_set)
-
-            if not resolution([sub_set], alpha):
+            # print("sub set +++",sub_set)
+            new_sub_set = sub_set.split('|')
+            if not resolution(new_sub_set, negation(alpha)):
                 #print(alpha, "does not entail",sub_set)
                 valid_set.append(sub_set)
                 #print("updated valid set: ",valid_set)
@@ -137,6 +137,7 @@ class BeliefBase:
                     best_score = score
                     #print("score ", score, "best score", best_score)
 
+            print("best set:", best_set, "best set type:", type(best_set))
             self.formulas = set(best_set)
             #print(self.formulas)
             return 
@@ -151,11 +152,9 @@ class BeliefBase:
             return
         else:
             #levi identity
-            print(f"Belief set before contraction {self.formulas}")
-            self.contraction(negation(alpha))
-            print(f"Belief set after contraction before expand {self.formulas}")
+            self.contraction(alpha)
             self.expansion(alpha)
-            print(f"Belief set after expansion {self.formulas}")
+            print(f"Belief set after revision {self.formulas}")
 
         # check AGM postulates between old and new belief set, as well as sentence
         check_agm_revision_postulates(B_old, alpha, self)

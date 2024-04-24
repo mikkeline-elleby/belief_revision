@@ -113,7 +113,7 @@ def to_clauses(formula):
 def resolution(belief_base,alpha):
     global CLAUSES, NEW, RESOLVENTS
 
-    CLAUSES, NEW, RESOLVENTS = [], set(), set() #BUGGGG NEED REINITIALISATION  !!
+    CLAUSES, NEW, RESOLVENTS = [], set(), set()
 
     negated_alpha = "not(" + alpha + ")"
     formula = belief_base + [negated_alpha]
@@ -332,6 +332,8 @@ if __name__ == '__main__':
     print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"), "\n")
 
     print(resolution(['p'],"p"), "\n")
+
+    print(resolution(['p'],"not(p)"), "\n")
 
     print(resolution(['p'],"q"), "\n")
 
