@@ -4,8 +4,8 @@
 # and(KB,not(alpha)) into CNF and then perform the resolution algorithm.
 
 CLAUSES = []
-NEW = []
-RESOLVENTS = []
+NEW = set()
+RESOLVENTS = set()
 LITERALS1 = []
 LITERALS2 = []
 
@@ -115,7 +115,7 @@ def resolution(belief_base,alpha):
 
 
 
-    CLAUSES, NEW, RESOLVENTS = [], [], [] #BUGGGG NEED REINITIALISATION  !!
+    CLAUSES, NEW, RESOLVENTS = [], set(), set() #BUGGGG NEED REINITIALISATION  !!
 
 
 
@@ -147,21 +147,19 @@ def resolution(belief_base,alpha):
                     LITERALS1.clear()
                     LITERALS2.clear()
                     if r != None:
-                        RESOLVENTS.append(r)
+                        RESOLVENTS.add(r)
                     if "empty" in RESOLVENTS:
                         print(f"Belief Base entails {alpha}")
                         return True # KB entails alpha
-                    NEW.extend(RESOLVENTS)
+                    NEW = NEW.union(RESOLVENTS)
         #RESOLVENTS.clear()
         #print("CLAUSE",CLAUSES)
         #print("NEW",NEW)
-        if set(NEW).issubset(CLAUSES):
+        if NEW.issubset(CLAUSES):
             print(f"Belief Base does not entail {alpha}")
             return False # KB does not entail alpha
 
-        CLAUSES.extend(NEW)
-        #NEW.clear()
-        CLAUSES = list(set(CLAUSES))
+        CLAUSES = list(set(CLAUSES).union(NEW))
 
 
 # iterates over the formula until no changes are made (there are no impications or biimplications to eliminate)
@@ -334,7 +332,7 @@ def distributive_laws(formula):
 
 if __name__ == '__main__':
     pass
-    #print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
+    print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"))
     #print(resolution(['p'],"p"))
     #print(resolution(['p'],"q"))
     #print(distributive_laws("or(a,and(b,c))")) #should give and(or(a,b),or(a,c))
