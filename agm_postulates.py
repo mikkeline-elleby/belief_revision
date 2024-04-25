@@ -29,6 +29,7 @@ def check_agm_revision_postulates(old_belief_set, belief, belief_set):
 
 def success_postulate(p, B_new):
     """p is included in the set of B revised by p"""
+
     print("success postulate")
     if p in B_new.formulas:
         return "success"
@@ -39,6 +40,7 @@ def success_postulate(p, B_new):
 
 def inclusion_postulate(B_old, p, B_new):
     """B revised by p - is a subset of B expanded by p"""
+
     print("inclusion postulate")
     B_old.expansion(p)
 
@@ -89,6 +91,7 @@ def consistency_postulate(p, B_new):
 
 def extenstionality_postulate(B_old, p, B_new):
     """If p <-> q in Cn(Ø), then B * p == B * q"""
+    
     success = False
     for formula in B_old.formulas:
         a, b = find_equivalence(p, formula)

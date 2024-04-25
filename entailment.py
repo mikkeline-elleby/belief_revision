@@ -111,6 +111,9 @@ def to_clauses(formula):
 # Lasty, the method loops through each pair of clauses to resolve possibe complementary literals.
 
 def resolution(belief_base,alpha):
+    if type(belief_base) == type(set()):
+        belief_base = list(belief_base)
+
     global CLAUSES, NEW, RESOLVENTS
 
     CLAUSES, NEW, RESOLVENTS = [], set(), set()

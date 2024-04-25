@@ -8,11 +8,13 @@ def main():
     belief_base = BeliefBase()
 
     # Get initial belief base from the user
-    initial_belief_base_input = input("Enter initial belief base (comma-separated): ")
-    belief_base.update(initial_belief_base_input.split(','))
+    print("The format in the belief base is as follows:")
+    print("p, not(p), and(p,q), or(p,q), imp(p,q) and bi(p,q)")
+    initial_belief_base_input = input("Enter initial belief base (space-separated): ")
+    belief_base.formulas = {x.strip(',') for x in initial_belief_base_input.split(' ')}
 
     while True:
-        print("\nCurrent belief base:", belief_base)
+        print("\nCurrent belief base:", belief_base.formulas)
         print("Options:")
         print("1. Check entailment")
         print("2. Contract belief base")
@@ -23,7 +25,7 @@ def main():
 
         if choice == '1':
             formula = input("Enter the formula to check for entailment: ")
-            if resolution(belief_base, formula):
+            if resolution(belief_base.formulas, formula):
                 print(f"The formula '{formula}' is entailed by the belief base.")
             else:
                 print(f"The formula '{formula}' is not entailed by the belief base.")
