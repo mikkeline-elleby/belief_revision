@@ -1,5 +1,5 @@
 # AGM postulates for revision
-
+from entailment import resolution, matching_comma
 from formulas import *
 from copy import deepcopy
 
@@ -29,7 +29,7 @@ def check_agm_revision_postulates(old_belief_set, belief, belief_set):
 
 def success_postulate(p, B_new):
     """p is included in the set of B revised by p"""
-
+    print("success postulate")
     if p in B_new.formulas:
         return "success"
     else:
@@ -39,7 +39,7 @@ def success_postulate(p, B_new):
 
 def inclusion_postulate(B_old, p, B_new):
     """B revised by p - is a subset of B expanded by p"""
-
+    print("inclusion postulate")
     B_old.expansion(p)
 
     # check if all sentences of new belief set is present in previous belief set
@@ -54,15 +54,14 @@ def inclusion_postulate(B_old, p, B_new):
 def vacuity_postulate(B_old, p, B_new):
     """If not p is not in B, then B revised by p is equal to B expanded by p"""
 
-    # determine if not p is present in Belief Set B
-    for x in B_old.formulas:
-        if negation(p) in x:
-            return "neutral"
+    # determine if belief set entails not(p)
+    if resolution(list(B_old.formulas), negation(p)):
+        return "neutral"
 
-    # if not p not present B_new == B + p
+    print("vacuity postulate")
+    # if not(p) is not entailed then B_new == B + p
     B_old.expansion(p)
-    print("B_old:", B_old.formulas)
-    print("B_new:", B_new.formulas)
+
     if B_old == B_new:
         return "success"
     else:
@@ -72,33 +71,38 @@ def vacuity_postulate(B_old, p, B_new):
 
 def consistency_postulate(p, B_new):
     """B revised by p is consistent if p is consistent"""
+
     # check if belief p is consistent
-
     if check_consistency(p):
+        print("consistency postulate")
 
-        # check is new belief set is consistent
+        # new belief set must also be consistent
         if check_consistency(B_new.formulas):
             return "success"
         else:
             print(f"Consistency Postulate not satisfied by B * {p}")
             return "failure"
 
-    # new belief in inconsistent
+    # new belief is inconsistent
     return "neutral"
 
 
 def extenstionality_postulate(B_old, p, B_new):
     """If p <-> q in Cn(Ø), then B * p == B * q"""
     success = False
-
     for formula in B_old.formulas:
         a, b = find_equivalence(p, formula)
 
-        if (a != False and b!= False and (a == p or b == p)):
+        if (a != False and b!= False) and (p == a or p == b):
+            print("extensionality postulate", a, b)
+            q = a if b == p else b
             # B * q == B * p
-            B_old.revise(q)
+            print("B_old:", B_old.formulas)
+            print("B_new:", B_new.formulas)
+            B_old.revision(negation(q))
+            print("B_old revised:", B_old.formulas)
             if B_old == B_new:
-                return success == True
+                success = True
             else:
                 print(f"Extensionality Postulate not satisfied by B * {p}")
                 return "failure"
@@ -114,23 +118,23 @@ def extenstionality_postulate(B_old, p, B_new):
 
 def check_consistency(belief_set):
     for x in belief_set:
-        if "not" not in x:
-            return True
-        
-    return False
+        if resolution(list(belief_set), negation(x)):
+            return False
+    return True
 
 def find_equivalence(p, formula):
     if formula[0:2] == "bi":
         if (p in formula):
-            formula_stripped = formula.replace("bi", "").strip("()")
-            a, b = formula_stripped.split(",", 1)
-
+            comma_index = matching_comma(formula)
+            a = formula[3:comma_index]
+            b = formula[comma_index+1:-1]
             return a,b
     return False, False
 
 if __name__ == '__main__':
     ...
-    # print(find_equivalence("p", "bi(p,q)"))
-    # print(find_equivalence("w", "bi(p,q)"))
-    # print(find_equivalence("q", "bi(p,q)"))
-    # print(find_equivalence("p", "bi(p,and(q,w)"))
+    print(find_equivalence("p", "bi(p,q)"))
+    print(find_equivalence("w", "bi(p,q)"))
+    print(find_equivalence("q", "bi(p,q)"))
+    print(find_equivalence("p", "bi(p,and(q,w)"))
+    print(find_equivalence("and(p,q)", "bi(and(p,q),or(s,t))"))

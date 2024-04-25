@@ -10,13 +10,13 @@ q = "q"
 r = "r"
 s = "s"
 
-print("############ \nBASE CASE \n############")
+print("############ \nSECOND CASE\n############")
 formula1 = p
 print(f"Revision 1: B * {formula1}")
 B.revision(formula1)
 print(f"Belief base after 1. revision: {B.formulas} \n")
 
-formula2 = q
+formula2 = equivalence(s,q)
 print(f"Revision 2: B * {formula2}")
 B.revision(formula2)
 print(f"Belief base after 2. revision: {B.formulas} \n")
@@ -35,3 +35,4 @@ formula5 = s
 print(f"Revision 5: B * {formula5}")
 B.revision(formula5)
 print(f"Belief base after 5. revision: {B.formulas} \n")
+

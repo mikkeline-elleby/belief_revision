@@ -137,7 +137,7 @@ class BeliefBase:
                     best_score = score
                     #print("score ", score, "best score", best_score)
 
-            #print("best set:", best_set, "best set type:", type(best_set))
+            # print("best set:", best_set, "best set type:", type(best_set))
             self.formulas = set(best_set)
             #print(self.formulas)
             return 
@@ -147,7 +147,7 @@ class BeliefBase:
         B_old = deepcopy(self)
 
         #levi identity
-        negated_alpha = "not(" + alpha + ")"
+        negated_alpha = negation(alpha)
         self.contraction(negated_alpha)
         self.expansion(alpha)
 
@@ -157,6 +157,7 @@ class BeliefBase:
 
         return
 
-    def __eq__(self, value: object) -> bool:
-        """Used for comparing belief base instances only based on belief set"""
-        return self.formulas == value.formulas
+    def __eq__(self, other: object) -> bool:
+        """Used for comparing belief base instances which is only belief set dependent"""
+        return self.formulas == other.formulas
+
