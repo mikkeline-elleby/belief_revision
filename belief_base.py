@@ -46,12 +46,8 @@ def parse_formula(formula):
 
 def evaluate_formula(formula, truth_assignment):
     operator, variables = formula
-    print(f"operator: {operator}\n variables: {variables}\n formula: {formula}")
 
     if variables == [''] or variables == []:
-        print("operator:", operator)
-        print("truth_assignment:", truth_assignment)
-        print("truth[operator]:", truth_assignment[operator])
         return truth_assignment[operator]
 
     def evaluate(var):
