@@ -46,8 +46,12 @@ def parse_formula(formula):
 
 def evaluate_formula(formula, truth_assignment):
     operator, variables = formula
+    print(f"operator: {operator}\n variables: {variables}\n formula: {formula}")
 
-    if variables == [''] :
+    if variables == [''] or variables == []:
+        print("operator:", operator)
+        print("truth_assignment:", truth_assignment)
+        print("truth[operator]:", truth_assignment[operator])
         return truth_assignment[operator]
 
     def evaluate(var):
@@ -77,6 +81,7 @@ def entrenchment(formula_str):
     variables = find_variable(formula_str)
     truth_assignments = itertools.product([True, False], repeat=len(variables))
     satisfiable_count = sum(evaluate_formula(formula, dict(zip(variables, assignment))) for assignment in truth_assignments)
+
     return satisfiable_count
 
 def generate_subsets(input_set):
@@ -127,8 +132,6 @@ class BeliefBase:
 
                 score = 0 
                 for elem in i:
-                    #print(elem) 
-                    #print(score)
                     score += entrenchment(elem)
                     #print(score)
                 #print(i, " has a score of ", score )
@@ -143,6 +146,12 @@ class BeliefBase:
             return 
 
     def revision(self, alpha):
+
+        # first we check for entailment
+        if resolution(self.formulas, alpha):
+            # if the belief set entails alpha -> nothing to be done
+            return
+
         # make copy of belief base for AGM checking
         B_old = deepcopy(self)
 

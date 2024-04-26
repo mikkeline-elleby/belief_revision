@@ -36,3 +36,23 @@ print(f"Revision 5: B * {formula5}")
 B.revision(formula5)
 print(f"Belief base after 5. revision: {B.formulas} \n")
 
+formula6 = r
+print(f"Revision 6: B * {formula6}")
+B.revision(formula6)
+print(f"Belief base after 6. revision: {B.formulas} \n")
+
+formula7 = negation(disjunction(p,q))
+print(f"Revision 7: B * {formula7}")
+B.revision(formula7)
+print(f"Belief base after 7. revision: {B.formulas} \n")
+
+formula8 = equivalence(q,s)
+print(f"Revision 8: B * {formula8}")
+B.revision(formula8)
+print(f"Belief base after 8. revision: {B.formulas} \n")
+
+formula9 = negation(s)
+print(f"Revision 9: B * {formula9}")
+B.revision(formula9)
+print(f"Belief base after 9. revision: {B.formulas} \n")
+

@@ -91,7 +91,7 @@ def consistency_postulate(p, B_new):
 
 def extenstionality_postulate(B_old, p, B_new):
     """If p <-> q in Cn(Ø), then B * p == B * q"""
-    
+
     success = False
     for formula in B_old.formulas:
         a, b = find_equivalence(p, formula)
@@ -99,12 +99,9 @@ def extenstionality_postulate(B_old, p, B_new):
         if (a != False and b!= False) and (p == a or p == b):
             print("extensionality postulate", a, b)
             q = a if b == p else b
-            # B * q == B * p
-            print("B_old:", B_old.formulas)
-            print("B_new:", B_new.formulas)
             B_old.revision(negation(q))
-            print("B_old revised:", B_old.formulas)
-            if B_old == B_new:
+
+            if B_old == B_new: # B * q == B * p
                 success = True
             else:
                 print(f"Extensionality Postulate not satisfied by B * {p}")
