@@ -14,6 +14,7 @@ from agm_postulates import check_agm_revision_postulates
 VARIABLE_REGEX = re.compile(r"and|or|not|imp|bi|([a-zA-Z])")
 
 def parenthesis_valid(variable):
+    """check that we in fact have an opening and closing parenthesis to claim that this is a valid formula"""
     c = 0
     for letter in variable:
         if letter == "(":
@@ -40,6 +41,7 @@ def create_valid_formula(variables):
 
 
 def parse_formula(formula):
+    """parse the formulas"""
     parts = formula.split('(')
     operator = parts[0]
     variables = create_valid_formula(('('.join(parts[1:])).rstrip(')').split(','))
@@ -47,6 +49,7 @@ def parse_formula(formula):
 
 
 def evaluate_formula(formula, truth_assignment):
+    """evaluate the fomula using the logic operators"""
     operator, variables = formula
 
     if variables == [''] or variables == []:
@@ -56,6 +59,7 @@ def evaluate_formula(formula, truth_assignment):
             return False
 
     def evaluate(var):
+
         return truth_assignment[var] if var in truth_assignment else evaluate_formula(parse_formula(var), truth_assignment)
 
     try:
@@ -74,6 +78,7 @@ def evaluate_formula(formula, truth_assignment):
 
 
 def find_variable(formula):
+    """find the variables used in the belief base with the help of regex matching"""
     variables = []
     for match in VARIABLE_REGEX.findall(formula):
         if match is not None and match != "":
@@ -82,16 +87,21 @@ def find_variable(formula):
 
 
 def entrenchment(formula_str):
-    #count number of satisfiable formulas
+    """count number of satisfiable formulas"""
     formula = parse_formula(formula_str)
     variables = find_variable(formula_str)
+
+    #creates all the possible combination of true and false for the truth table by using the number of variables 
     truth_assignments = itertools.product([True, False], repeat=len(variables))
+
+    #sum the number of satisfiable formulas 
     satisfiable_count = sum(evaluate_formula(formula, dict(zip(variables, assignment))) for assignment in truth_assignments)
 
     return satisfiable_count
 
 
 def generate_subsets(input_set):
+    """generate all the possible subsets of the belief base """
     all_subsets = []
     for subset_length in range(1, len(input_set) + 1):
         for subset in combinations(input_set, subset_length):
@@ -122,14 +132,18 @@ class BeliefBase:
                 self.formulas = set()
                 return
 
+        #create an array that will hold the valid sets 
         valid_set = []
+        #generate all the possible subsets from our formulas 
         subset_of_set = generate_subsets(self.formulas)
 
+        #fow each subset check if they are entailed by the alpha, if this is not the case add them to the valid set
         for sub_set in subset_of_set:
             new_sub_set = sub_set.split('|')
             if not resolution(new_sub_set, negated_alpha):
                 valid_set.append(sub_set)
 
+        #choose the valid set that has the highest entrenchment score 
         if len(valid_set) > 0:
             best_set = []
             best_score = 0
