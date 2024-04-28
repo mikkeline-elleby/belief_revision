@@ -24,5 +24,7 @@ Starting the program with user inputs:
 Starting each of the three test scripts can be done by: which revises a belief base for multiple inputs
 
 ``` python3 test_script_1.py ```
+
 ``` python3 test_script_2.py ```
+
 ``` python3 test_script_3.py ```

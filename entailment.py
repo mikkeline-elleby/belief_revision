@@ -326,16 +326,13 @@ def distributive_laws(formula):
     else:
         return formula
 
+
 if __name__ == '__main__':
     print()
 
     print(resolution(["bi(r,or(p,s))","not(r)"],"not(p)"), "\n")
 
     print(resolution(['p'],"p"), "\n")
-
-    print(resolution(['p'],"not(p)"), "\n")
-
-    print(resolution(['p'],"q"), "\n")
 
     print(distributive_laws("or(a,and(b,c))"), "\n") #should give and(or(a,b),or(a,c))
     assert distributive_laws("or(a,and(b,c))") == "and(or(a,b),or(a,c))"
@@ -346,6 +343,3 @@ if __name__ == '__main__':
     print(eliminate_double_negation("and(p,not(not(s)))"), "\n")
 
     print(de_morgans("and(p,not(or(w,e)))"), "\n")
-
-    # convert_to_CNF(["and(p,q)","not(a)","or(a,b)", "or(not(a),b)","bi(not(p),a)", "imp(a,and(b,q))"],"or(p,t)")
-

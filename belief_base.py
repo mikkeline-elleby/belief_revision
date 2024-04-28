@@ -4,7 +4,7 @@
 import itertools
 from itertools import combinations
 import re
-from copy import deepcopy
+from copy import deepcopy, copy
 
 # importing project components
 from entailment import resolution
@@ -48,21 +48,27 @@ def evaluate_formula(formula, truth_assignment):
     operator, variables = formula
 
     if variables == [''] or variables == []:
-        return truth_assignment[operator]
+        try:
+            return truth_assignment[operator]
+        except KeyError:
+            return False
 
     def evaluate(var):
         return truth_assignment[var] if var in truth_assignment else evaluate_formula(parse_formula(var), truth_assignment)
-
-    if operator == 'and':
-        return all(evaluate(var) for var in variables)
-    elif operator == 'or':
-        return any(evaluate(var) for var in variables)
-    elif operator == 'not':
-        return not evaluate(variables[0])
-    elif operator == 'imp':
-        return not evaluate(variables[0]) or evaluate(variables[1])
-    elif operator == 'bi':
-        return evaluate(variables[0]) == evaluate(variables[1])
+    
+    try:
+        if operator == 'and':
+            return all(evaluate(var) for var in variables)
+        elif operator == 'or':
+            return any(evaluate(var) for var in variables)
+        elif operator == 'not':
+            return not evaluate(variables[0])
+        elif operator == 'imp':
+            return not evaluate(variables[0]) or evaluate(variables[1])
+        elif operator == 'bi':
+            return evaluate(variables[0]) == evaluate(variables[1])
+    except IndexError:
+        return False
 
 def find_variable(formula):
     variables = []
@@ -103,8 +109,15 @@ class BeliefBase:
         self.formulas.add(alpha)
         return
 
-    def contraction(self, alpha):
-        #alpha is removed from the belief base.
+    def contraction(self, negated_alpha):
+        #negated_alpha is removed from the belief base.
+
+        # special case if belief base only contains negated_alpha
+        # then contracted belief base is empty
+        if len(self.formulas) == 1:
+            if next(iter(self.formulas)) == negated_alpha:
+                self.formulas = set()
+                return
 
         valid_set = []
         subset_of_set = generate_subsets(self.formulas)
@@ -113,8 +126,8 @@ class BeliefBase:
         for sub_set in subset_of_set:
             # print("sub set +++",sub_set)
             new_sub_set = sub_set.split('|')
-            if not resolution(new_sub_set, alpha):
-                #print(alpha, "does not entail",sub_set)
+            if not resolution(new_sub_set, negated_alpha):
+                #print(negated_alpha, "does not entail",sub_set)
                 valid_set.append(sub_set)
                 #print("updated valid set: ",valid_set)
 
@@ -145,19 +158,19 @@ class BeliefBase:
 
         # first we check for entailment
         if resolution(self.formulas, alpha):
-            # if the belief set entails alpha -> nothing to be done
+            print(f"The belief base already entails {alpha} -> nothing to revise")
             return
 
         # make copy of belief base for AGM checking
-        B_old = deepcopy(self)
+        B_old = BeliefBase()
+        B_old.formulas = set(self.formulas)
 
-        #levi identity
+        # revision following the levi identity
         negated_alpha = negation(alpha)
         self.contraction(negated_alpha)
         self.expansion(alpha)
 
-
-        # check AGM postulates between old and new belief set, as well as sentence
+        # check AGM postulates between old and new belief set, as well as alpha
         check_agm_revision_postulates(B_old, alpha, self)
 
         return

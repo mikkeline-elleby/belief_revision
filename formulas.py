@@ -10,6 +10,10 @@ def disjunction(p, q):
 
 def negation(p):
     """Negation: not(p)"""
+    # if p is already negated -> remove double negation
+    if p[0:4] == "not(" and p[len(p)-1:len(p)] == ")":
+        return p[4:len(p)-1]
+    
     return f"not({p})"
 
 def implication(p, q):
@@ -30,3 +34,7 @@ if __name__ == '__main__':
     formula2 = disjunction(p, negation(q))
     formula3 = implication(p, conjunction(q, r))
     print(f"Formula1: {formula1}, formula2: {formula2}, formula3: {formula3}")
+
+    print(negation(negation(p)), negation(negation(q)))
+    s1 = "not(p)"
+    print(s1[0:4])
