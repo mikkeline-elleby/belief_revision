@@ -35,6 +35,5 @@ if __name__ == '__main__':
     formula3 = implication(p, conjunction(q, r))
     print(f"Formula1: {formula1}, formula2: {formula2}, formula3: {formula3}")
 
-    print(negation(negation(p)), negation(negation(q)))
-    s1 = "not(p)"
-    print(s1[0:4])
+    print(negation(negation(p)))
+    print(negation(negation(conjunction(q,p))))

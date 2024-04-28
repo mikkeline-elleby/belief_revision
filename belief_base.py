@@ -24,6 +24,7 @@ def parenthesis_valid(variable):
             return False
     return c == 0
 
+
 def create_valid_formula(variables):
     new_variables = []
     current_variable = []
@@ -44,6 +45,7 @@ def parse_formula(formula):
     variables = create_valid_formula(('('.join(parts[1:])).rstrip(')').split(','))
     return operator, variables
 
+
 def evaluate_formula(formula, truth_assignment):
     operator, variables = formula
 
@@ -55,7 +57,7 @@ def evaluate_formula(formula, truth_assignment):
 
     def evaluate(var):
         return truth_assignment[var] if var in truth_assignment else evaluate_formula(parse_formula(var), truth_assignment)
-    
+
     try:
         if operator == 'and':
             return all(evaluate(var) for var in variables)
@@ -70,12 +72,14 @@ def evaluate_formula(formula, truth_assignment):
     except IndexError:
         return False
 
+
 def find_variable(formula):
     variables = []
     for match in VARIABLE_REGEX.findall(formula):
         if match is not None and match != "":
             variables.append(match)
     return variables
+
 
 def entrenchment(formula_str):
     #count number of satisfiable formulas
@@ -86,6 +90,7 @@ def entrenchment(formula_str):
 
     return satisfiable_count
 
+
 def generate_subsets(input_set):
     all_subsets = []
     for subset_length in range(1, len(input_set) + 1):
@@ -95,9 +100,7 @@ def generate_subsets(input_set):
 
 
 ##############################################################################################
-
 #  CLASS BELIEF BASE
-
 ##############################################################################################
 
 class BeliefBase:
@@ -110,7 +113,7 @@ class BeliefBase:
         return
 
     def contraction(self, negated_alpha):
-        #negated_alpha is removed from the belief base.
+        """negated_alpha is removed from the belief base by contraction"""
 
         # special case if belief base only contains negated_alpha
         # then contracted belief base is empty
@@ -121,38 +124,30 @@ class BeliefBase:
 
         valid_set = []
         subset_of_set = generate_subsets(self.formulas)
-        #print("sub set +++",subset_of_set)
 
         for sub_set in subset_of_set:
-            # print("sub set +++",sub_set)
             new_sub_set = sub_set.split('|')
             if not resolution(new_sub_set, negated_alpha):
-                #print(negated_alpha, "does not entail",sub_set)
                 valid_set.append(sub_set)
-                #print("updated valid set: ",valid_set)
 
         if len(valid_set) > 0:
             best_set = []
             best_score = 0
 
             for i in valid_set:
-                if len(i)>1 : 
+                if len(i)>1 :
                     i = i.split('|')
 
-                score = 0 
+                score = 0
                 for elem in i:
                     score += entrenchment(elem)
-                    #print(score)
-                #print(i, " has a score of ", score )
+
                 if score >= best_score:
                     best_set = i
                     best_score = score
-                    #print("score ", score, "best score", best_score)
 
-            # print("best set:", best_set, "best set type:", type(best_set))
             self.formulas = set(best_set)
-            #print(self.formulas)
-            return 
+            return
 
     def revision(self, alpha):
 

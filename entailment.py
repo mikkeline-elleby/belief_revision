@@ -71,19 +71,14 @@ def from_literals_to_clause(f,literals):
 def resolve(c1,c2):
     to_literals(c1,"1")
     to_literals(c2,"2")
-    #print("c1:",c1,"c2:",c2,"LITERALS1:",LITERALS1)
 
     for l1 in LITERALS1:
         for l2 in LITERALS2:
-            #print("l1",l1,"l2",l2)
             if l1 == "not(" + l2 + ")" or l2 == "not(" + l1 + ")":
-                #print("resolved", l1,"and",l2,"with",c1,"and",c2)
-                #print(CLAUSES)
 
                 LITERALS1.remove(l1)
                 LITERALS2.remove(l2)
                 new_literals = LITERALS1+LITERALS2
-                #print("new_literals",new_literals)
 
                 if len(new_literals) == 0:
                     return "empty"
@@ -123,9 +118,7 @@ def resolution(belief_base,alpha):
     formula = make_formula("",formula)
     formula = convert_to_CNF(formula)
 
-    # print("CNF convertion completed. The sentence is:\n", formula)
     to_clauses(formula)
-    #print("\nThe clauses are:",CLAUSES)
 
     # if there is ony one clause, then we cannot obtain the empty clause
     if len(CLAUSES) == 1:
@@ -140,7 +133,6 @@ def resolution(belief_base,alpha):
         for c1 in CLAUSES:
             for c2 in CLAUSES.copy():
                 if c1 != c2 and CLAUSES.index(c2) > CLAUSES.index(c1):
-                    #print("c1",c1,"c2",c2)
                     r = resolve(c1,c2)
                     LITERALS1.clear()
                     LITERALS2.clear()
@@ -149,9 +141,6 @@ def resolution(belief_base,alpha):
                     if "empty" in RESOLVENTS:
                         return True # KB entails alpha
                     NEW = NEW.union(RESOLVENTS)
-        #RESOLVENTS.clear()
-        #print("CLAUSE",CLAUSES)
-        #print("NEW",NEW)
         if set(NEW).issubset(CLAUSES):
             return False # KB does not entail alpha
 
