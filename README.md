@@ -1,4 +1,4 @@
-# Belief Revision Assignment
+# Belief Revision
 
 This is the implementation of a belief revision engine for the belief revision assignment in Introduction to AI. 
 
